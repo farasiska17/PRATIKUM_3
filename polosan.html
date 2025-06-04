@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laporan Praktikum 03</title>
+
+  <!-- Menghubungkan file CSS eksternal -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Mengimpor library SweetAlert2 untuk notifikasi alert -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+
+  <h1>Laporan Praktikum - 03</h1>
+
+  <!-- Form utama dengan ID dan class untuk styling -->
+  <form id="formPraktikum" class="form-grid">
+
+    <!-- Baris pertama: Nama dan NIM -->
+    <div class="row row-2">
+      <div class="form-group">
+        <label for="inputName">Masukkan Nama:</label>
+        <input type="text" id="inputName" />
+      </div>
+
+      <div class="form-group">
+        <label for="inputNIM">Masukkan NIM:</label>
+        <input type="text" id="inputNIM" />
+      </div>
+    </div>
+
+    <!-- Baris kedua: Asal, Dosen Favorit, Tanggal Lahir -->
+    <div class="row row-3">
+      <div class="form-group">
+        <label for="inputAsal">Masukkan Asal Kamu:</label>
+        <input type="text" id="inputAsal" />
+      </div>
+
+      <div class="form-group">
+        <label for="selectDosen">Pilih Dosen Favorit:</label>
+        <select id="selectDosen">
+          <option value="" disabled selected>Pilih salah satu</option>
+          <option value="Pak Agus Mulyanto">Pak Agus Mulyanto</option>
+          <option value="Bu Yuni Roza">Bu Yuni Roza</option>
+          <option value="Bu Yessy Asri">Bu Yessy Asri</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="inputTanggalLahir">Pilih Tanggal Lahir Anda:</label>
+        <input type="date" id="inputTanggalLahir" />
+      </div>
+    </div>
+
+    <!-- Baris ketiga: AI favorit dan Teman favorit -->
+    <div class="row row-favorit">
+      <div class="form-label-kiri">
+        <strong>Tulis Hal Favorit Kamu:</strong>
+      </div>
+
+      <div class="form-favorit-kanan">
+        <div class="form-group">
+          <label for="inputAiFavorit">Masukkan AI Favorit:</label>
+          <input type="text" id="inputAiFavorit" />
+        </div>
+
+        <div class="form-group">
+          <label for="inputTemanFavorit">Masukkan Nama Teman Favorit:</label>
+          <input type="text" id="inputTemanFavorit" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Tombol Submit -->
+    <div class="form-group full">
+      <button type="submit" id="submitBtn">Kirim</button>
+    </div>
+
+  </form>
+
+  <!-- Script utama untuk validasi dan notifikasi -->
+  <script>
+    document.getElementById("formPraktikum").addEventListener("submit", async function (e) {
+      // Mencegah reload halaman setelah form dikirim
+      e.preventDefault();
+
+      // Mengambil semua nilai dari input form
+      const name = document.getElementById("inputName").value.trim();
+      const nim = document.getElementById("inputNIM").value.trim();
+      const asal = document.getElementById("inputAsal").value.trim();
+      const dosen = document.getElementById("selectDosen").value;
+      const tgl = document.getElementById("inputTanggalLahir").value;
+      const ai = document.getElementById("inputAiFavorit").value.trim();
+      const teman = document.getElementById("inputTemanFavorit").value.trim();
+
+      // Validasi setiap input, jika kosong tampilkan alert
+      if (!name) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'Nama belum diisi!' });
+        return;
+      }
+
+      if (!nim) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'NIM belum diisi!' });
+        return;
+      }
+
+      if (!asal) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'Asal belum diisi!' });
+        return;
+      }
+
+      if (!dosen) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'Dosen favorit belum dipilih!' });
+        return;
+      }
+
+      if (!tgl) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'Tanggal lahir belum dipilih!' });
+        return;
+      }
+
+      if (!ai) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'AI favorit belum diisi!' });
+        return;
+      }
+
+      if (!teman) {
+        Swal.fire({ icon: 'error', title: 'Kolom Kosong!', text: 'Nama teman favorit belum diisi!' });
+        return;
+      }
+
+      // Membuat array data untuk ditampilkan satu per satu
+      const dataList = [
+        { label: "Nama kamu:", value: name },
+        { label: "NIM kamu:", value: nim },
+        { label: "Asal kamu:", value: asal },
+        { label: "Dosen favorit kamu:", value: dosen },
+        { label: "Tanggal lahir kamu:", value: tgl },
+        { label: "AI favorit kamu:", value: ai },
+        { label: "Teman favorit kamu:", value: teman }
+      ];
+
+      // Menampilkan satu per satu data dengan alert menggunakan SweetAlert
+      for (const item of dataList) {
+        await Swal.fire({
+          icon: 'info',
+          html: `<strong>${item.label}</strong><br>${item.value}`
+        });
+      }
+
+      // Alert terakhir jika semua berhasil
+      await Swal.fire({
+        icon: 'success',
+        title: 'Sukses!',
+        text: 'Form berhasil dikirim!'
+      });
+
+      // Reset semua input form ke default
+      document.getElementById("formPraktikum").reset();
+    });
+  </script>
+
+</body>
+</html>
